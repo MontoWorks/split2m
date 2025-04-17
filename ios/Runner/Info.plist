@@ -54,6 +54,6 @@
 	<key>NSMicrophoneUsageDescription</key>
 	<string>動画ファイルを選択するためにマイクへのアクセスが必要です。</string>
   <key>ITSAppUsesNonExemptEncryption</key>
-  <true/>
+  <false/>
 </dict>
 </plist>
