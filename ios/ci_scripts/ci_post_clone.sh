@@ -16,7 +16,7 @@ flutter precache --ios
 # Install Flutter dependencies.
 flutter pub get
 
-flutter build ios --release
+# flutter build ios --release
 
 # Install CocoaPods using Homebrew.
 HOMEBREW_NO_AUTO_UPDATE=1 # disable homebrew's automatic updates.
