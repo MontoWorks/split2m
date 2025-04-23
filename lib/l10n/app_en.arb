@@ -1,0 +1,15 @@
+{
+  "appTitle": "2-min Video Splitter",
+  "pickVideo": "Pick Video",
+  "splitAndSave": "Split and Save every 2 min",
+  "processingStarted": "Splitting started...",
+  "processing": "Splitting... ({current}/{total})",
+  "saved": "Saved to Camera Roll",
+  "permissionRequiredTitle": "Permission Required",
+  "permissionRequiredContent": "Full access or write permission to Photos is required to save videos. Please allow it in settings.",
+  "cancel": "Cancel",
+  "openSettings": "Open Settings",
+  "openCameraRoll": "Open Camera Roll",
+  "initPreviewFailed": "Failed to initialize video preview: {error}",
+  "noPermission": "Required permission not granted."
+}
