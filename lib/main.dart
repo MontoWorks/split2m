@@ -10,6 +10,10 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+// l10n
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -24,11 +28,21 @@ class Split2mApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: '2分動画分割',
+      title: AppLocalizations.of(context)?.appTitle ?? '2分動画分割',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en'),
+        Locale('ja'),
+      ],
       home: const HomePage(),
     );
   }
@@ -69,7 +83,7 @@ class _HomePageState extends State<HomePage> {
       } catch (e) {
         setState(() {
           _videoFile = null;
-          _status = "動画プレビューの初期化に失敗しました: $e";
+          _status = "${AppLocalizations.of(context)?.initPreviewFailed.replaceFirst('{error}', '$e') ?? "動画プレビューの初期化に失敗しました: $e"}";
         });
       }
     }
@@ -97,14 +111,14 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _isProcessing = true;
       _progress = 0.0;
-      _status = "分割処理を開始します...";
+      _status = AppLocalizations.of(context)?.processingStarted ?? "分割処理を開始します...";
     });
 
     // 権限確認
     if (!await _requestPermissions()) {
       setState(() {
         _isProcessing = false;
-        _status = "必要な権限がありません。";
+        _status = AppLocalizations.of(context)?.noPermission ?? "必要な権限がありません。";
       });
       return;
     }
@@ -130,7 +144,9 @@ class _HomePageState extends State<HomePage> {
           "-i \"${file.path}\" -ss $start -t $segmentLength -c copy \"$outPath\"";
       setState(() {
         _progress = (i + 1) / segmentCount;
-        _status = "分割中... (${i + 1}/$segmentCount)";
+        _status = AppLocalizations.of(context)?.processing
+            .replaceFirst('{current}', '${i + 1}')
+            .replaceFirst('{total}', '$segmentCount') ?? "分割中... (${i + 1}/$segmentCount)";
       });
       await FFmpegKit.execute(cmd);
       await GallerySaver.saveVideo(outPath);
@@ -142,7 +158,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _isProcessing = false;
       _progress = 1.0;
-      _status = "カメラロールに保存しました";
+      _status = AppLocalizations.of(context)?.saved ?? "カメラロールに保存しました";
     });
   }
 
@@ -163,21 +179,21 @@ class _HomePageState extends State<HomePage> {
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('権限が必要です'),
-        content: const Text('動画を保存するには「写真」へのフルアクセスまたは書き込み権限が必要です。設定から許可してください。'),
+        title: Text(AppLocalizations.of(context)?.permissionRequiredTitle ?? '権限が必要です'),
+        content: Text(AppLocalizations.of(context)?.permissionRequiredContent ?? '動画を保存するには「写真」へのフルアクセスまたは書き込み権限が必要です。設定から許可してください。'),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: const Text('キャンセル'),
+            child: Text(AppLocalizations.of(context)?.cancel ?? 'キャンセル'),
           ),
           TextButton(
             onPressed: () {
               openAppSettings();
               Navigator.of(context).pop();
             },
-            child: const Text('設定を開く'),
+            child: Text(AppLocalizations.of(context)?.openSettings ?? '設定を開く'),
           ),
         ],
       ),
@@ -189,7 +205,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('2分動画分割'),
+        title: Text(AppLocalizations.of(context)?.appTitle ?? '2分動画分割'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -202,9 +218,9 @@ class _HomePageState extends State<HomePage> {
               child: ElevatedButton.icon(
                 onPressed: _isProcessing ? null : _pickVideo,
                 icon: const Icon(Icons.video_library, size: 28),
-                label: const Text(
-                  '動画を選択',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                label: Text(
+                  AppLocalizations.of(context)?.pickVideo ?? '動画を選択',
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
@@ -235,9 +251,9 @@ class _HomePageState extends State<HomePage> {
                   child: ElevatedButton.icon(
                     onPressed: _splitAndSaveVideo,
                     icon: const Icon(Icons.cut, size: 28),
-                    label: const Text(
-                      '2分ごとに分割して保存',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    label: Text(
+                      AppLocalizations.of(context)?.splitAndSave ?? '2分ごとに分割して保存',
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.deepPurple,
@@ -270,7 +286,7 @@ class _HomePageState extends State<HomePage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    if (_status == "カメラロールに保存しました")
+                    if (_status == (AppLocalizations.of(context)?.saved ?? "カメラロールに保存しました"))
                       Padding(
                         padding: const EdgeInsets.only(top: 16),
                         child: SizedBox(
@@ -279,9 +295,9 @@ class _HomePageState extends State<HomePage> {
                           child: ElevatedButton.icon(
                             onPressed: _openPhotosApp,
                             icon: const Icon(Icons.photo_library, size: 24),
-                            label: const Text(
-                              'カメラロールを開く',
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            label: Text(
+                              AppLocalizations.of(context)?.openCameraRoll ?? 'カメラロールを開く',
+                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                             ),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.green,

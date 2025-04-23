@@ -1,0 +1,15 @@
+{
+  "appTitle": "2分動画分割",
+  "pickVideo": "動画を選択",
+  "splitAndSave": "2分ごとに分割して保存",
+  "processingStarted": "分割処理を開始します...",
+  "processing": "分割中...（{current}/{total}）",
+  "saved": "カメラロールに保存しました",
+  "permissionRequiredTitle": "権限が必要です",
+  "permissionRequiredContent": "動画を保存するには「写真」へのフルアクセスまたは書き込み権限が必要です。設定から許可してください。",
+  "cancel": "キャンセル",
+  "openSettings": "設定を開く",
+  "openCameraRoll": "カメラロールを開く",
+  "initPreviewFailed": "動画プレビューの初期化に失敗しました: {error}",
+  "noPermission": "必要な権限がありません。"
+}
