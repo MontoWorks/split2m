@@ -15,6 +15,7 @@ flutter precache --ios
 
 # Install Flutter dependencies.
 flutter pub get
+flutter gen-l10n
 
 # flutter build ios --release
 
