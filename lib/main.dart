@@ -25,6 +25,7 @@ class Split2mApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: '2分動画分割',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
