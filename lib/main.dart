@@ -83,7 +83,7 @@ class _HomePageState extends State<HomePage> {
       } catch (e) {
         setState(() {
           _videoFile = null;
-          _status = "${AppLocalizations.of(context)?.initPreviewFailed.replaceFirst('{error}', '$e') ?? "動画プレビューの初期化に失敗しました: $e"}";
+          _status = AppLocalizations.of(context)?.initPreviewFailed('$e') ?? "動画プレビューの初期化に失敗しました: $e";
         });
       }
     }
@@ -144,9 +144,7 @@ class _HomePageState extends State<HomePage> {
           "-i \"${file.path}\" -ss $start -t $segmentLength -c copy \"$outPath\"";
       setState(() {
         _progress = (i + 1) / segmentCount;
-        _status = AppLocalizations.of(context)?.processing
-            .replaceFirst('{current}', '${i + 1}')
-            .replaceFirst('{total}', '$segmentCount') ?? "分割中... (${i + 1}/$segmentCount)";
+        _status = AppLocalizations.of(context)?.processing('${i + 1}', '$segmentCount') ?? "分割中... (${i + 1}/$segmentCount)";
       });
       await FFmpegKit.execute(cmd);
       await GallerySaver.saveVideo(outPath);
